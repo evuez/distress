@@ -55,3 +55,6 @@ target/
 
 # Sublime Text stuff
 *.sublime-*
+
+# Distress stuff
+*.log
