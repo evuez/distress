@@ -26,9 +26,12 @@ class Thing(object):
 	"""
 	MATRIX = None
 	COLOR = None
+	SHUFFLE = False
 
 	def __init__(self, location):
 		self.location = location
+		if self.SHUFFLE:
+			self.MATRIX = shuffle_matrix(self.MATRIX)
 
 	def draw(self):
 		for x, row in enumerate(self.MATRIX):
@@ -36,14 +39,14 @@ class Thing(object):
 				if height is None:
 					continue
 				dist = matrix_distance(0, 0, x, y, THING_SIZE)
-				self.draw_cell(
+				self._draw_cell(
 					lighten(self.COLOR, height),
 					self.location.x + dist[0],
 					self.location.y + dist[1]
 				)
 
 
-	def draw_cell(self, color, x1, y1):
+	def _draw_cell(self, color, x1, y1):
 		x2, y2 = x1 + THING_SIZE, y1 + THING_SIZE
 		glColor4f(*color)
 		glBegin(GL_POLYGON)
@@ -83,17 +86,31 @@ class Bush(Tree):
 		[  1, 1.6,   1, 1.8],
 	]
 	COLOR = hex_to_rgb('00380eff')
-
-	def __init__(self, *args, **kwargs):
-		super(Bush, self).__init__(*args, **kwargs)
-		self.MATRIX = shuffle_matrix(self.MATRIX)
+	SHUFFLE = True
 
 
-class Stone(Thing):
+class Ground(Thing):
 	pass
 
 
-class Rock(Stone):
+class Soil(Ground):
+	MATRIX = [
+		[1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9],
+		[1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9],
+		[1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9],
+		[1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9],
+		[1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9],
+		[1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9],
+		[1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9],
+		[1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9],
+		[1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9],
+		[1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9],
+	]
+	COLOR = hex_to_rgb('241105ff')
+	SHUFFLE = True
+
+
+class Rock(Ground):
 	MATRIX = [
 		[ 1.2, 1.3, 1.2, 2.7, 1.3, 1.9, 1.0, 1.8, 1.3],
 		[ 1.6, 1.1, 2.3, 2.2, 2.9, 1.2, 1.5, 1.4, 1.2],
@@ -106,13 +123,9 @@ class Rock(Stone):
 		[ 1.3, 1.1, 1.9, 1.6, 1.4, 1.5, 1.4, 1.9, 1.1],
 	]
 	COLOR = hex_to_rgb('2d3939ff')
+	SHUFFLE = True
 
-	def __init__(self, *args, **kwargs):
-		super(Rock, self).__init__(*args, **kwargs)
-		self.MATRIX = shuffle_matrix(self.MATRIX)
-
-
-class Gravel(Stone):
+class Gravel(Ground):
 	MATRIX = [[1]]
 	COLOR = hex_to_rgb('232424ff')
 
