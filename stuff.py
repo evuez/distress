@@ -5,6 +5,11 @@ from copy import deepcopy
 from math import sqrt
 from random import shuffle
 from struct import unpack
+from pyglet.gl import glBegin
+from pyglet.gl import glColor4f
+from pyglet.gl import glVertex2f
+from pyglet.gl import glEnd
+from pyglet.gl import GL_POLYGON
 
 
 Point = namedtuple('Point', 'x y')
@@ -13,8 +18,8 @@ Point = namedtuple('Point', 'x y')
 WINDOW_WIDTH = 1200
 WINDOW_HEIGHT = 600
 
-MAP_WIDTH = 400
-MAP_HEIGHT = 400
+MAP_WIDTH = 900
+MAP_HEIGHT = WINDOW_HEIGHT
 
 THING_SIZE = 4
 
@@ -54,3 +59,12 @@ def shuffle_matrix(matrix, rows_only=False):
 def distance(x1, y1, x2, y2, ratio=1):
 	return sqrt(sum([n**2 for n in matrix_distance(x1, y1, x2, y2, ratio)]))
 
+
+def rectangle(color, x1, y1, x2, y2):
+	glColor4f(*color)
+	glBegin(GL_POLYGON)
+	glVertex2f(x1, y1)
+	glVertex2f(x1, y2)
+	glVertex2f(x2, y2)
+	glVertex2f(x2, y1)
+	glEnd()

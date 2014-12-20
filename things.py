@@ -1,15 +1,11 @@
 # -*- coding: utf-8 -*-
 
 
-from pyglet.gl import glBegin
-from pyglet.gl import glColor4f
-from pyglet.gl import glVertex2f
-from pyglet.gl import glEnd
-from pyglet.gl import GL_POLYGON
 from stuff import THING_SIZE
 from stuff import matrix_distance
 from stuff import shuffle_matrix
 from stuff import lighten
+from stuff import rectangle
 from stuff import hex_to_rgb
 
 
@@ -51,13 +47,7 @@ class Thing(object):
 
 	def _draw_cell(self, color, x1, y1):
 		x2, y2 = x1 + THING_SIZE, y1 + THING_SIZE
-		glColor4f(*color)
-		glBegin(GL_POLYGON)
-		glVertex2f(x1, y1)
-		glVertex2f(x1, y2)
-		glVertex2f(x2, y2)
-		glVertex2f(x2, y1)
-		glEnd()
+		rectangle(color, x1, y1, x2, y2)
 
 
 class Tree(Thing):
