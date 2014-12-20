@@ -16,11 +16,13 @@ glEnable(GL_BLEND)
 
 from tiles import Map
 
+map_ = Map(MAP_WIDTH, MAP_HEIGHT)
+
 @window.event
 def on_draw():
 	glClear(GL_COLOR_BUFFER_BIT)
 	glLoadIdentity()
-	Map(MAP_WIDTH, MAP_HEIGHT).draw()
+	map_.draw()
 
 
 pyglet.app.run()

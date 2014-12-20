@@ -21,7 +21,7 @@ WINDOW_HEIGHT = 600
 MAP_WIDTH = 900
 MAP_HEIGHT = WINDOW_HEIGHT
 
-THING_SIZE = 4
+CELL_SIZE = 4
 
 
 def lighten(color, scale=1.0):

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 
-from stuff import THING_SIZE
+from stuff import CELL_SIZE
 from stuff import matrix_distance
 from stuff import shuffle_matrix
 from stuff import lighten
@@ -37,7 +37,7 @@ class Thing(object):
 			for y, height in enumerate(row):
 				if height is None:
 					continue
-				dist = matrix_distance(0, 0, x, y, THING_SIZE)
+				dist = matrix_distance(0, 0, x, y, CELL_SIZE)
 				self._draw_cell(
 					lighten(self.COLOR, height),
 					self.location.x + dist[0],
@@ -46,7 +46,7 @@ class Thing(object):
 
 
 	def _draw_cell(self, color, x1, y1):
-		x2, y2 = x1 + THING_SIZE, y1 + THING_SIZE
+		x2, y2 = x1 + CELL_SIZE, y1 + CELL_SIZE
 		rectangle(color, x1, y1, x2, y2)
 
 
