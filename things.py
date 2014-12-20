@@ -115,3 +115,29 @@ class Rock(Stone):
 class Gravel(Stone):
 	MATRIX = [[1]]
 	COLOR = hex_to_rgb('232424ff')
+
+
+class Body(Thing):
+	pass
+
+
+class Orphon(Body):
+	"""
+	The hero
+	"""
+	MATRIX = [
+		[1, 1],
+		[1, 1]
+	]
+	COLOR = hex_to_rgb('05ffeeff')
+
+
+class Phampled(Body):
+	"""
+	The lost one
+	"""
+	MATRIX = [
+		[1, 1],
+		[1, 1]
+	]
+	COLOR = hex_to_rgb('ff6905ff')
