@@ -5,10 +5,11 @@ from things import *
 
 
 MAP_THINGS = [
-	Pine,
-	Bush,
+	Soil
 	Rock,
-	Gravel
+	Gravel,
+	Bush,
+	Pine,
 ]
 
 

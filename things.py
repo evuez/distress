@@ -22,11 +22,14 @@ class Thing(object):
 	rotated 90 degrees counterclockwise.
 	 - COLOR is the base color of the thing, real color is calculated
 	using heights. It must contain the alpha channel.
+	 - SHUFFLE allows to shuffle the matrix before rendering it
+	 - DENSITY is the density of the thing on the map, max is 100
 	 - location set the top left corner of the first cell of the thing.
 	"""
 	MATRIX = None
 	COLOR = None
 	SHUFFLE = False
+	DENSITY = None
 
 	def __init__(self, location):
 		self.location = location
@@ -76,6 +79,7 @@ class Pine(Tree):
 		[None, None, None, None, None,    1, None, None, None, None, None],
 	]
 	COLOR = hex_to_rgb('001f08ff')
+	DENSITY = 30
 
 
 class Bush(Tree):
@@ -87,9 +91,13 @@ class Bush(Tree):
 	]
 	COLOR = hex_to_rgb('00380eff')
 	SHUFFLE = True
+	DENSITY = 10
 
 
 class Ground(Thing):
+	"""
+	Things can be placed on top of any ground
+	"""
 	pass
 
 
@@ -108,6 +116,7 @@ class Soil(Ground):
 	]
 	COLOR = hex_to_rgb('241105ff')
 	SHUFFLE = True
+	DENSITY = 100
 
 
 class Rock(Ground):
@@ -124,11 +133,12 @@ class Rock(Ground):
 	]
 	COLOR = hex_to_rgb('2d3939ff')
 	SHUFFLE = True
+	DENSITY = 20
 
 class Gravel(Ground):
 	MATRIX = [[1]]
 	COLOR = hex_to_rgb('232424ff')
-
+	DENSITY = 40
 
 class Body(Thing):
 	pass
