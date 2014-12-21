@@ -16,12 +16,21 @@ Point = namedtuple('Point', 'x y')
 
 
 WINDOW_WIDTH = 1200
-WINDOW_HEIGHT = 600
+WINDOW_HEIGHT = 728
 
 MAP_WIDTH = 900
 MAP_HEIGHT = WINDOW_HEIGHT
 
-CELL_SIZE = 4
+CELL_SIZE = 2
+
+
+class NotFertileError(Exception):
+	def __init__(self, grower, growing):
+		message = "{grower} not fertile enough to grow {growing}".format(
+			grower=grower.__class__.__name__,
+			growing=growing.__class__.__name__,
+		)
+		super(NotFertileError, self).__init__(message)
 
 
 def lighten(color, scale=1.0):
@@ -42,6 +51,10 @@ def hex_to_rgb(hex_):
 
 def matrix_distance(x1, y1, x2, y2, ratio=1):
 	return [n * ratio for n in (x2 - x1 , y2 - y1)]
+
+
+def matrix_size(matrix, ratio):
+	return [n * ratio for n in (len(matrix[0]), len(matrix))]
 
 
 def shuffle_matrix(matrix, rows_only=False):
