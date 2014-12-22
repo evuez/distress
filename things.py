@@ -29,7 +29,7 @@ class Thing(object):
 	thing to exist: {thing1: distance_max, thing2: ...} (with max distance
 	in cells)
 	 - GROWS sets everything that can "grow" on that thing
-	 - LAYER set the height of the thing, lower layer = lower height
+	 - LAYER sets the height of the thing
 	 - location set the top left corner of the first cell of the thing.
 	"""
 	MATRIX = None
@@ -51,6 +51,13 @@ class Thing(object):
 		return self._location.x
 	@x.setter
 	def x(self, value):
+		try:
+			diff = value - self._location.x
+			self.vertex_list.vertices[::2] = [
+				x + diff for x in self.vertex_list.vertices[::2]
+			]
+		except AttributeError:
+			pass
 		self._location = Point(value, self.y)
 
 	@property
@@ -58,7 +65,15 @@ class Thing(object):
 		return self._location.y
 	@y.setter
 	def y(self, value):
+		try:
+			diff = value - self._location.y
+			self.vertex_list.vertices[1::2] = [
+				y + diff for y in self.vertex_list.vertices[1::2]
+			]
+		except AttributeError:
+			pass
 		self._location = Point(self.x, value)
+		# update vertices
 
 	def _create(self):
 		self.vertices = []
@@ -241,6 +256,10 @@ class Cranberry(Tree):
 
 class Body(Thing):
 	LAYER = 'bodies'
+
+	def move(self, x, y):
+		self.x += x
+		self.y += y
 
 
 class Orphon(Body):

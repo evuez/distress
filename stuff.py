@@ -27,6 +27,8 @@ CELL_SIZE = 2
 BODY_HERO = 'Orphon'
 BODY_LOST = 'Phampled'
 
+START_POS = (100, 100)
+
 
 class NotFertileError(Exception):
 	def __init__(self, grower, growing):

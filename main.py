@@ -28,5 +28,18 @@ def on_draw():
 	# Draw map
 	map_.draw()
 
+from stuff import CELL_SIZE
+@window.event
+def on_key_press(symbol, modifiers):
+	unit = CELL_SIZE
+	if symbol == key.UP:
+		map_.hero.move(0, unit)
+	if symbol == key.DOWN:
+		map_.hero.move(0, -unit)
+	if symbol == key.RIGHT:
+		map_.hero.move(unit, 0)
+	if symbol == key.LEFT:
+		map_.hero.move(-unit, 0)
+
 
 pyglet.app.run()
