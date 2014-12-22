@@ -5,6 +5,7 @@ from copy import deepcopy
 from math import sqrt
 from random import shuffle
 from struct import unpack
+from pyglet.graphics import OrderedGroup
 from pyglet.gl import glBegin
 from pyglet.gl import glColor4f
 from pyglet.gl import glVertex3f
@@ -25,13 +26,6 @@ CELL_SIZE = 2
 
 BODY_HERO = 'Orphon'
 BODY_LOST = 'Phampled'
-
-# LAYERS = {
-# 	'soil': OrderedGroup(0),
-# 	'ground': OrderedGroup(1),
-# 	'bodies': OrderedGroup(2),
-# 	'trees': OrderedGroup(3)
-# }
 
 
 class NotFertileError(Exception):

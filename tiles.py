@@ -3,6 +3,7 @@
 
 import things
 from things import Soil
+from things import Thing
 from logger import logger
 from stuff import Point
 from stuff import matrix_distance
@@ -20,13 +21,13 @@ from pyglet.gl import GL_QUADS
 
 
 class Map(object):
-	LAYERS = [ # use dict with meaningful name for keys instead
-		OrderedGroup(0),
-		OrderedGroup(1),
-		OrderedGroup(2),
-		OrderedGroup(3),
-		OrderedGroup(4)
-	]
+	LAYERS = {
+		'soil': OrderedGroup(0),
+		'ground': OrderedGroup(1),
+		'bodies': OrderedGroup(2),
+		'trees': OrderedGroup(3),
+		'berries': OrderedGroup(4)
+	}
 
 	def __init__(self, width, height):
 		self.width = width
@@ -39,15 +40,9 @@ class Map(object):
 		for x in xrange(0, self.width, Soil.SIZE[0]):
 			for y in xrange(0, self.height, Soil.SIZE[1]):
 				soil = Soil(x, y)
-				self._map.add(
-					len(soil.vertices) / 2,
-					GL_QUADS,
-					self.LAYERS[soil.LAYER],
-					('v2i', soil.vertices),
-					('c4B', soil.colors)
-				)
+				self.add(soil)
 				try:
-					soil.grow(self._map, self.LAYERS, Soil.SIZE, x, y)
+					soil.grow(self, Soil.SIZE, x, y)
 				except NotFertileError, e:
 					logger.debug(str(e))
 
@@ -61,15 +56,18 @@ class Map(object):
 	# def _add_body(self, body_name):
 	# 	getattr(things, body_name)(pos)
 
+	def add(self, thing):
+		self._map.add(
+			len(thing.vertices) / 2,
+			GL_QUADS,
+			self.LAYERS[thing.LAYER],
+			('v2i', thing.vertices),
+			('c4B', thing.colors)
+		)
+
 	def draw(self):
 		hero = things.Orphon(100, 100)
-		self._map.add(
-			len(hero.vertices) / 2,
-			GL_QUADS,
-			self.LAYERS[hero.LAYER],
-			('v2i', hero.vertices),
-			('c4B', hero.colors)
-		)
+		self.add(hero)
 
 		self._map.draw()
 

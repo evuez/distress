@@ -88,52 +88,31 @@ class Thing(object):
 
 	def update(self):
 		self._create()
+		return self
 
-	def grow(self, map_, layers, size, x, y):
+	def grow(self, map_, size, x, y):
 		if not self.GROWS:
 			return
-
 		thing = getattr(modules[__name__], choice(self.GROWS))(x, y)
-		thing.SIZE = matrix_size(thing.MATRIX, CELL_SIZE)
-
-		# center on x
-		if thing.SIZE[0] < size[0]:
-			thing.x += (size[0] - thing.SIZE[0]) / 2
-
-		# center on y
-		if thing.SIZE[1] < size[1]:
-			thing.y += (size[1] - thing.SIZE[1]) / 2
-
 		# randomly check if can grow
 		if randint(0, 100) > thing.DENSITY:
 			raise NotFertileError(self, thing)
-
-		# take x and y updates into account
-		thing.update()
-
-		map_.add(
-			len(thing.vertices) / 2,
-			GL_QUADS,
-			layers[thing.LAYER],
-			('v2i', thing.vertices),
-			('c4B', thing.colors)
-		)
-
+		thing.SIZE = matrix_size(thing.MATRIX, CELL_SIZE)
+		# center on x
+		if thing.SIZE[0] < size[0]:
+			thing.x += (size[0] - thing.SIZE[0]) / 2
+		# center on y
+		if thing.SIZE[1] < size[1]:
+			thing.y += (size[1] - thing.SIZE[1]) / 2
+		map_.add(thing.update())
+		# grow from thing
 		try:
-			thing.grow(map_, layers, size, x, y)
+			thing.grow(map_, size, x, y)
 		except NotFertileError, e:
 			logger.debug(str(e))
 
 
-class Ground(Thing):
-	"""
-	Things can be placed on top of any ground
-
-	"""
-	pass
-
-
-class Soil(Ground):
+class Soil(Thing):
 	MATRIX = [
 		[1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 1.0, 1.1, 1.2],
 		[1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 1.0, 1.1, 1.2],
@@ -153,7 +132,11 @@ class Soil(Ground):
 	SHUFFLE = True
 	DENSITY = 100 # Not taken into account anyway: Soil everywhere
 	GROWS = ['Pine', 'Rock', 'Lake', 'Pine', 'Bush']
-	LAYER = 0
+	LAYER = 'soil'
+
+
+class Ground(Thing):
+	LAYER = 'ground'
 
 
 class Rock(Ground):
@@ -176,14 +159,9 @@ class Rock(Ground):
 	SHUFFLE = True
 	DENSITY = 40
 	GROWS = ['Pine', 'Bush']
-	LAYER = 1
 
 
-class Water(Thing):
-	pass
-
-
-class Lake(Water):
+class Lake(Ground):
 	MATRIX = [
 		[1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 1.0, 1.1, 1.2],
 		[1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 1.0, 1.1, 1.2],
@@ -202,11 +180,10 @@ class Lake(Water):
 	COLOR = hex_to_rgb('001442ff')
 	DENSITY = 20
 	SHUFFLE = True
-	LAYER = 1
 
 
 class Tree(Thing):
-	pass
+	LAYER = 'trees'
 
 
 class Pine(Tree):
@@ -226,7 +203,6 @@ class Pine(Tree):
 	COLOR = hex_to_rgb('001f08ff')
 	DENSITY = 100
 	SHUFFLE = False
-	LAYER = 3
 
 
 class Bush(Tree):
@@ -242,7 +218,6 @@ class Bush(Tree):
 	DENSITY = 40
 	SURROUNDING = {'Lake': 10}
 	GROWS = ['Cranberry']
-	LAYER = 3
 
 
 class Cranberry(Tree):
@@ -256,11 +231,11 @@ class Cranberry(Tree):
 	COLOR = hex_to_rgb('770124ff')
 	SHUFFLE = True
 	DENSITY = 30
-	LAYER = 4
+	LAYER = 'berries'
 
 
 class Body(Thing):
-	LAYER = 2
+	LAYER = 'bodies'
 
 
 class Orphon(Body):
