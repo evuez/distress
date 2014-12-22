@@ -58,6 +58,8 @@ class Thing(object):
 		self._location = Point(self.x, value)
 
 	def draw(self):
+		# Optimize later, uses vertex lists and per-thing-type-batches
+		# to draw
 		for y, row in enumerate(self.MATRIX):
 			for x, height in enumerate(row):
 				if height is None:
@@ -143,7 +145,7 @@ class Rock(Ground):
 	]
 	COLOR = hex_to_rgb('2d3939ff')
 	SHUFFLE = True
-	DENSITY = 20
+	DENSITY = 40
 	GROWS = ['Pine', 'Bush']
 
 
@@ -168,7 +170,7 @@ class Lake(Water):
 		[1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 1.0, 1.1, 1.2],
 	]
 	COLOR = hex_to_rgb('001442ff')
-	DENSITY = 10
+	DENSITY = 20
 	SHUFFLE = True
 
 

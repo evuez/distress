@@ -16,14 +16,6 @@ from random import choice
 
 
 class Map(object):
-	THINGS = [
-		things.Soil,
-		things.Rock,
-		things.Lake,
-		things.Bush,
-		things.Pine,
-	]
-
 	def __init__(self, width, height):
 		self.width = width
 		self.height = height
