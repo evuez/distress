@@ -2,6 +2,7 @@
 
 
 from logger import logger
+from pyglet.gl import GL_QUADS
 from random import choice
 from random import randint
 from sys import modules
@@ -10,7 +11,6 @@ from stuff import matrix_distance
 from stuff import shuffle_matrix
 from stuff import matrix_size
 from stuff import lighten
-from stuff import rectangle
 from stuff import hex_to_rgb
 from stuff import Point
 from stuff import NotFertileError
@@ -30,6 +30,7 @@ class Thing(object):
 	thing to exist: {thing1: distance_max, thing2: ...} (with max distance
 	in cells)
 	 - GROWS sets everything that can "grow" on that thing
+	 - LAYER set the height of the thing, lower layer = lower height
 	 - location set the top left corner of the first cell of the thing.
 	"""
 	MATRIX = None
@@ -38,11 +39,13 @@ class Thing(object):
 	DENSITY = None
 	SURROUNDING = None
 	GROWS = None
+	LAYER = None
 
 	def __init__(self, x=0, y=0):
 		self._location = Point(x, y)
 		if self.SHUFFLE:
 			self.MATRIX = shuffle_matrix(self.MATRIX)
+		self._create()
 
 	@property
 	def x(self):
@@ -58,50 +61,74 @@ class Thing(object):
 	def y(self, value):
 		self._location = Point(self.x, value)
 
-	def draw(self):
-		# Optimize later, uses vertex lists and per-thing-type-batches
-		# to draw
+	def _create(self):
+		self.vertices = []
+		self.colors = []
+
 		for y, row in enumerate(self.MATRIX):
 			for x, height in enumerate(row):
 				if height is None:
 					continue
 				dist = matrix_distance(0, 0, x, y, CELL_SIZE)
-				self._draw_cell(
+				self._create_cell(
 					lighten(self.COLOR, height),
 					self.x + dist[0],
 					self.y + dist[1]
 				)
 
-	def _draw_cell(self, color, x1, y1):
+	def _create_cell(self, color, x1, y1):
 		x2, y2 = x1 + CELL_SIZE, y1 + CELL_SIZE
-		rectangle(color, x1, y1, x2, y2)
+		self.vertices.extend([
+			x1, y1,
+			x1, y2,
+			x2, y2,
+			x2, y1,
+		])
+		self.colors.extend(color * 4)
 
-	def grow(self, size, x, y):
+	def update(self):
+		self._create()
+
+	def grow(self, map_, layers, size, x, y):
 		if not self.GROWS:
-			return []
+			return
+
 		thing = getattr(modules[__name__], choice(self.GROWS))(x, y)
 		thing.SIZE = matrix_size(thing.MATRIX, CELL_SIZE)
+
+		# center on x
 		if thing.SIZE[0] < size[0]:
 			thing.x += (size[0] - thing.SIZE[0]) / 2
+
+		# center on y
 		if thing.SIZE[1] < size[1]:
 			thing.y += (size[1] - thing.SIZE[1]) / 2
+
+		# randomly check if can grow
 		if randint(0, 100) > thing.DENSITY:
-			raise NotFertileError(self, thing) # Stop from top to bottom of the pile if no inner GROWS
-		things = [thing]
+			raise NotFertileError(self, thing)
+
+		# take x and y updates into account
+		thing.update()
+
+		map_.add(
+			len(thing.vertices) / 2,
+			GL_QUADS,
+			layers[thing.LAYER],
+			('v2i', thing.vertices),
+			('c4B', thing.colors)
+		)
+
 		try:
-			things.extend(thing.grow(size, x, y))
+			thing.grow(map_, layers, size, x, y)
 		except NotFertileError, e:
 			logger.debug(str(e))
-		return things
-
-
-class Tree(Thing):
-	pass
 
 
 class Ground(Thing):
 	"""
 	Things can be placed on top of any ground
+
 	"""
 	pass
 
@@ -126,6 +153,7 @@ class Soil(Ground):
 	SHUFFLE = True
 	DENSITY = 100 # Not taken into account anyway: Soil everywhere
 	GROWS = ['Pine', 'Rock', 'Lake', 'Pine', 'Bush']
+	LAYER = 0
 
 
 class Rock(Ground):
@@ -148,6 +176,7 @@ class Rock(Ground):
 	SHUFFLE = True
 	DENSITY = 40
 	GROWS = ['Pine', 'Bush']
+	LAYER = 1
 
 
 class Water(Thing):
@@ -173,6 +202,11 @@ class Lake(Water):
 	COLOR = hex_to_rgb('001442ff')
 	DENSITY = 20
 	SHUFFLE = True
+	LAYER = 1
+
+
+class Tree(Thing):
+	pass
 
 
 class Pine(Tree):
@@ -192,6 +226,7 @@ class Pine(Tree):
 	COLOR = hex_to_rgb('001f08ff')
 	DENSITY = 100
 	SHUFFLE = False
+	LAYER = 3
 
 
 class Bush(Tree):
@@ -207,6 +242,7 @@ class Bush(Tree):
 	DENSITY = 40
 	SURROUNDING = {'Lake': 10}
 	GROWS = ['Cranberry']
+	LAYER = 3
 
 
 class Cranberry(Tree):
@@ -220,10 +256,11 @@ class Cranberry(Tree):
 	COLOR = hex_to_rgb('770124ff')
 	SHUFFLE = True
 	DENSITY = 30
+	LAYER = 4
 
 
 class Body(Thing):
-	pass
+	LAYER = 2
 
 
 class Orphon(Body):

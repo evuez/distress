@@ -32,7 +32,7 @@ logs = {
 }
 
 logger = logging.getLogger('distress')
-logger.setLevel(logging.DEBUG)
+logger.setLevel(logging.INFO)
 
 for info in logs.values():
 	info['handler'].setFormatter(info['formatter'])
