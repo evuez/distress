@@ -26,6 +26,13 @@ CELL_SIZE = 2
 BODY_HERO = 'Orphon'
 BODY_LOST = 'Phampled'
 
+# LAYERS = {
+# 	'soil': OrderedGroup(0),
+# 	'ground': OrderedGroup(1),
+# 	'bodies': OrderedGroup(2),
+# 	'trees': OrderedGroup(3)
+# }
+
 
 class NotFertileError(Exception):
 	def __init__(self, grower, growing):

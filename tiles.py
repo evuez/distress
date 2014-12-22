@@ -62,7 +62,15 @@ class Map(object):
 	# 	getattr(things, body_name)(pos)
 
 	def draw(self):
-		# for thing in self._map:
-		# 	thing.draw()
+		hero = things.Orphon(100, 100)
+		self._map.add(
+			len(hero.vertices) / 2,
+			GL_QUADS,
+			self.LAYERS[hero.LAYER],
+			('v2i', hero.vertices),
+			('c4B', hero.colors)
+		)
+
 		self._map.draw()
+
 
