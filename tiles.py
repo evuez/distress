@@ -52,8 +52,8 @@ class Map(object):
 			len(thing.vertices) / 2,
 			GL_QUADS,
 			self.LAYERS[thing.LAYER],
-			('v2i', thing.vertices),
-			('c4B', thing.colors)
+			('v2i/dynamic', thing.vertices),
+			('c4B/static', thing.colors)
 		)
 
 	def draw(self):
