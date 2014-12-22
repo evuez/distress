@@ -2,7 +2,6 @@
 
 
 from logger import logger
-from pyglet.gl import GL_QUADS
 from random import choice
 from random import randint
 from sys import modules
@@ -90,26 +89,32 @@ class Thing(object):
 		self._create()
 		return self
 
-	def grow(self, map_, size, x, y):
+	def grow(self, map_, x, y):
 		if not self.GROWS:
 			return
 		thing = getattr(modules[__name__], choice(self.GROWS))(x, y)
 		# randomly check if can grow
 		if randint(0, 100) > thing.DENSITY:
 			raise NotFertileError(self, thing)
-		thing.SIZE = matrix_size(thing.MATRIX, CELL_SIZE)
 		# center on x
-		if thing.SIZE[0] < size[0]:
-			thing.x += (size[0] - thing.SIZE[0]) / 2
+		if thing.size()[0] < Soil.size()[0]:
+			thing.x += (Soil.size()[0] - thing.size()[0]) / 2
 		# center on y
-		if thing.SIZE[1] < size[1]:
-			thing.y += (size[1] - thing.SIZE[1]) / 2
+		if thing.size()[1] < Soil.size()[1]:
+			thing.y += (Soil.size()[1] - thing.size()[1]) / 2
 		map_.add(thing.update())
 		# grow from thing
 		try:
-			thing.grow(map_, size, x, y)
+			thing.grow(map_, x, y)
 		except NotFertileError, e:
 			logger.debug(str(e))
+
+	@classmethod
+	def size(cls):
+		if hasattr(cls, 'SIZE'):
+			return cls.SIZE
+		cls.SIZE = matrix_size(cls.MATRIX, CELL_SIZE)
+		return cls.SIZE
 
 
 class Soil(Thing):

@@ -3,17 +3,10 @@
 
 import things
 from things import Soil
-from things import Thing
 from logger import logger
-from stuff import Point
-from stuff import matrix_distance
 from stuff import matrix_size
 from stuff import CELL_SIZE
-from stuff import BODY_HERO
-from stuff import BODY_LOST
 from stuff import NotFertileError
-from random import randint
-from random import choice
 from pyglet.graphics import Batch
 from pyglet.graphics import OrderedGroup
 from pyglet.gl import GL_QUADS
@@ -35,14 +28,12 @@ class Map(object):
 
 		self._map = Batch()
 
-		Soil.SIZE = matrix_size(Soil.MATRIX, CELL_SIZE)
-
-		for x in xrange(0, self.width, Soil.SIZE[0]):
-			for y in xrange(0, self.height, Soil.SIZE[1]):
+		for x in xrange(0, self.width, Soil.size()[0]):
+			for y in xrange(0, self.height, Soil.size()[1]):
 				soil = Soil(x, y)
 				self.add(soil)
 				try:
-					soil.grow(self, Soil.SIZE, x, y)
+					soil.grow(self, x, y)
 				except NotFertileError, e:
 					logger.debug(str(e))
 
