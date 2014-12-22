@@ -30,8 +30,7 @@ class Map(object):
 				try:
 					self.map.extend(soil.grow(Soil.SIZE, x, y))
 				except NotFertileError, e:
-					logger.error(str(e))
-
+					logger.debug(str(e))
 
 	def draw(self):
 		for thing in self.map:

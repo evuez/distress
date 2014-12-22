@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 
+from logger import logger
 from random import choice
 from random import randint
 from sys import modules
@@ -90,7 +91,7 @@ class Thing(object):
 		try:
 			things.extend(thing.grow(size, x, y))
 		except NotFertileError, e:
-			pass
+			logger.debug(str(e))
 		return things
 
 
