@@ -27,7 +27,10 @@ CELL_SIZE = 2
 BODY_HERO = 'Orphon'
 BODY_LOST = 'Phampled'
 
-START_POS = (100, 100)
+START_POS = {
+	'hero': (0, 0),
+	'lost': (MAP_WIDTH - 100, MAP_HEIGHT - 100)
+}
 
 
 class NotFertileError(Exception):

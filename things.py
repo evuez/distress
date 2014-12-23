@@ -76,8 +76,8 @@ class Thing(object):
 		# update vertices
 
 	def _create(self):
-		self.vertices = []
-		self.colors = []
+		self.vertices = [] # not a ref to self.vertex_list.vertices
+		self.colors = [] # not a ref to self.vertex_list.colors
 
 		for y, row in enumerate(self.MATRIX):
 			for x, height in enumerate(row):

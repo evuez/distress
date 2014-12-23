@@ -32,6 +32,7 @@ class Map(object):
 		self._map = Batch()
 		self._create()
 		self._add_hero()
+		self._add_lost()
 
 
 	def _create(self):
@@ -54,23 +55,21 @@ class Map(object):
 		)
 		return thing.vertex_list
 
-	def _add_body(self, body_name, attr):
-		body = getattr(things, body_name)(*START_POS)
-		setattr(self, attr, body)
+	def _add_body(self, body_name, kind):
+		body = getattr(things, body_name)(*START_POS[kind])
+		setattr(self, kind, body)
 		self.add(body)
 		return body
 
-	@info('Adding hero')
+	@info("Adding {}".format(BODY_HERO))
 	def _add_hero(self):
 		self._add_body(BODY_HERO, 'hero')
 
+	@info("Hiding {}".format(BODY_LOST))
 	def _add_lost(self):
-		self._add_body(BODY_LOST, 'lost')
+		self._add_body(BODY_LOST, 'lost') # keep a list of every tree to hide him
 
 	def draw(self):
-		hero = things.Orphon(100, 100)
-		self.add(hero)
-
 		self._map.draw()
 
 
