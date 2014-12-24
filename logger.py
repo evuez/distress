@@ -6,20 +6,24 @@ from logging import StreamHandler
 from logging import FileHandler
 from logging import Formatter
 from functools import wraps
-
+from stuff import LOG_QUEUE
 
 class LiveStream(object):
+	def __init__(self, queue):
+		self.queue = queue
+
 	def write(self, data):
 		decoded = json.loads(data)
+		self.queue.append(decoded)
 		print decoded
 
 	def flush(self):
 		pass
 
 
-logs = {
+LOGS = {
 	'live': {
-		'handler': StreamHandler(LiveStream()),
+		'handler': StreamHandler(LiveStream(LOG_QUEUE)),
 		'formatter': Formatter("""{
 			"level": "%(levelname)s",
 			"message": "%(message)s"
@@ -34,7 +38,7 @@ logs = {
 logger = logging.getLogger('distress')
 logger.setLevel(logging.INFO)
 
-for info in logs.values():
+for info in LOGS.values():
 	info['handler'].setFormatter(info['formatter'])
 	logger.addHandler(info['handler'])
 

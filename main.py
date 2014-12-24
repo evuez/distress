@@ -6,6 +6,7 @@ from pyglet.window import key, Window
 from stuff import WINDOW_WIDTH, WINDOW_HEIGHT
 from stuff import MAP_WIDTH, MAP_HEIGHT
 from stuff import LOG_WIDTH, LOG_HEIGHT
+from stuff import LOG_QUEUE
 from tiles import Map
 from tiles import Log
 
@@ -20,8 +21,10 @@ glEnable(GL_BLEND)
 
 # Create tiles
 map_ = Map(MAP_WIDTH, MAP_HEIGHT)
-log = Log(LOG_WIDTH, LOG_HEIGHT, MAP_WIDTH, 0)
+log = Log(LOG_WIDTH, LOG_HEIGHT, MAP_WIDTH, 0, LOG_QUEUE)
 
+# Start logger
+log.start()
 
 @window.event
 def on_draw():
@@ -40,6 +43,6 @@ def on_key_press(symbol, modifiers):
 	if symbol == key.DOWN:
 		log.scroll(-10)
 	if symbol == key.RIGHT:
-		log.update("test" + str(random()))
+		log.insert("test" + str(random()))
 
 pyglet.app.run()

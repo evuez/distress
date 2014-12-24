@@ -5,6 +5,7 @@ from copy import deepcopy
 from math import sqrt
 from random import shuffle
 from struct import unpack
+from collections import deque
 from pyglet.graphics import OrderedGroup
 from pyglet.gl import glBegin
 from pyglet.gl import glColor4f
@@ -34,6 +35,9 @@ START_POS = {
 	'hero': (0, 0),
 	'lost': (MAP_WIDTH - 100, MAP_HEIGHT - 100)
 }
+
+
+LOG_QUEUE = deque()
 
 
 class NotFertileError(Exception):
