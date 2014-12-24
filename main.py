@@ -5,7 +5,9 @@ from pyglet.gl import *
 from pyglet.window import key, Window
 from stuff import WINDOW_WIDTH, WINDOW_HEIGHT
 from stuff import MAP_WIDTH, MAP_HEIGHT
+from stuff import LOG_WIDTH, LOG_HEIGHT
 from tiles import Map
+from tiles import Log
 
 
 # Create window
@@ -16,8 +18,9 @@ glClearColor(0, 0, 0, 1.0)
 glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
 glEnable(GL_BLEND)
 
-# Create map
+# Create tiles
 map_ = Map(MAP_WIDTH, MAP_HEIGHT)
+log = Log(LOG_WIDTH, LOG_HEIGHT, MAP_WIDTH, 0)
 
 
 @window.event
@@ -25,21 +28,18 @@ def on_draw():
 	glClear(GL_COLOR_BUFFER_BIT)
 	glLoadIdentity()
 
-	# Draw map
+	# Draw tiles
 	map_.draw()
+	log.draw()
 
-from stuff import CELL_SIZE
+from random import random
 @window.event
 def on_key_press(symbol, modifiers):
-	unit = CELL_SIZE
 	if symbol == key.UP:
-		map_.hero.move(0, unit)
+		log.scroll(10)
 	if symbol == key.DOWN:
-		map_.hero.move(0, -unit)
+		log.scroll(-10)
 	if symbol == key.RIGHT:
-		map_.hero.move(unit, 0)
-	if symbol == key.LEFT:
-		map_.hero.move(-unit, 0)
-
+		log.update("test" + str(random()))
 
 pyglet.app.run()
