@@ -261,6 +261,10 @@ class Body(Thing):
 		self.x += x
 		self.y += y
 
+	def move_to(self, x, y):
+		self.x = x
+		self.y = y
+
 
 class Orphon(Body):
 	"""
