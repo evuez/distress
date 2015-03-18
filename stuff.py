@@ -5,6 +5,7 @@ from copy import deepcopy
 from math import sqrt
 from random import shuffle
 from struct import unpack
+from collections import deque
 from pyglet.graphics import OrderedGroup
 from pyglet.gl import glBegin
 from pyglet.gl import glColor4f
@@ -19,8 +20,11 @@ Point = namedtuple('Point', 'x y')
 WINDOW_WIDTH = 1200
 WINDOW_HEIGHT = 728
 
-MAP_WIDTH = 900
+MAP_WIDTH = 884
 MAP_HEIGHT = WINDOW_HEIGHT
+
+LOG_WIDTH = WINDOW_WIDTH - MAP_WIDTH
+LOG_HEIGHT = WINDOW_HEIGHT / 2
 
 CELL_SIZE = 2
 
@@ -31,6 +35,9 @@ START_POS = {
 	'hero': (0, 0),
 	'lost': (MAP_WIDTH - 100, MAP_HEIGHT - 100)
 }
+
+
+LOG_QUEUE = deque()
 
 
 class NotFertileError(Exception):
