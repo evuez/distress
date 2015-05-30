@@ -6,6 +6,7 @@ from math import sqrt
 from random import shuffle
 from struct import unpack
 from collections import deque
+from codecs import decode
 from pyglet.graphics import OrderedGroup
 from pyglet.gl import glBegin
 from pyglet.gl import glColor4f
@@ -24,7 +25,7 @@ MAP_WIDTH = 884
 MAP_HEIGHT = WINDOW_HEIGHT
 
 LOG_WIDTH = WINDOW_WIDTH - MAP_WIDTH
-LOG_HEIGHT = WINDOW_HEIGHT / 2
+LOG_HEIGHT = WINDOW_HEIGHT // 2
 
 CELL_SIZE = 2
 
@@ -55,14 +56,14 @@ def lighten(color, scale=1.0):
 	 - color is a tuple (r, g, b, a)
 	 - scale can be any number, if < 1, color will be darken
 	"""
-	return map(
+	return tuple(map(
 		lambda x: int(min(max(x * scale, 0), 255)),
 		color[:3]
-	) + list(color[3:])
+	)) + color[3:]
 
 
 def hex_to_rgb(hex_):
-	return unpack('BBBB', hex_.decode('hex'))
+	return unpack('BBBB', decode(hex_, 'hex'))
 
 
 def matrix_distance(x1, y1, x2, y2, ratio=1):

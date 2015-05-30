@@ -15,7 +15,7 @@ class LiveStream(object):
 	def write(self, data):
 		decoded = json.loads(data)
 		self.queue.append(decoded)
-		print decoded
+		print(decoded)
 
 	def flush(self):
 		pass

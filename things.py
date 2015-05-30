@@ -113,15 +113,15 @@ class Thing(object):
 			raise NotFertileError(self, thing)
 		# center on x
 		if thing.size()[0] < Soil.size()[0]:
-			thing.x += (Soil.size()[0] - thing.size()[0]) / 2
+			thing.x += (Soil.size()[0] - thing.size()[0]) // 2
 		# center on y
 		if thing.size()[1] < Soil.size()[1]:
-			thing.y += (Soil.size()[1] - thing.size()[1]) / 2
+			thing.y += (Soil.size()[1] - thing.size()[1]) // 2
 		map_.add(thing.update())
 		# grow from thing
 		try:
 			thing.grow(map_, x, y)
-		except NotFertileError, e:
+		except NotFertileError as e:
 			logger.debug(str(e))
 
 	@classmethod

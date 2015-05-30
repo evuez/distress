@@ -41,18 +41,18 @@ class Map(object):
 
 
 	def _create(self):
-		for x in xrange(0, self.width, Soil.size()[0]):
-			for y in xrange(0, self.height, Soil.size()[1]):
+		for x in range(0, self.width, Soil.size()[0]):
+			for y in range(0, self.height, Soil.size()[1]):
 				soil = Soil(x, y)
 				self.add(soil)
 				try:
 					soil.grow(self, x, y)
-				except NotFertileError, e:
+				except NotFertileError as e:
 					logger.debug(str(e))
 
 	def add(self, thing):
 		thing.vertex_list = self._map.add(
-			len(thing.vertices) / 2,
+			len(thing.vertices) // 2,
 			GL_QUADS,
 			self.LAYERS[thing.LAYER],
 			('v2i/dynamic', thing.vertices),
