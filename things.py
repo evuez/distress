@@ -17,7 +17,7 @@ from stuff import NotFertileError
 
 class Thing(object):
 	"""
-	Every thing as only one color, and are
+	Each thing has only one color, and is
 	represented by a matrix of any size.
 	 - MATRIX is a tuple of tuple(s) of heights (0 being the ground). The
 	number of rows and columns must be an odd number.
